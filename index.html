@@ -1,0 +1,125 @@
+<title>Arkanoit js</title>
+<style>
+  body {
+    background-color: #000000;
+    display: grid;
+    place-content: center;
+  }
+  canvas {
+    border: 4px, solid, #fff;
+    border-bottom: transparent;
+    background: #000000;
+    margin: 0, auto;
+    display: block;
+  }
+</style>
+
+<canvas> </canvas>
+
+<script>
+  canvas = document.querySelector("canvas");
+  const ctx = canvas.getContext("2d"); // dibujo en 2D
+
+  //Dimensiones del canvas
+  canvas.width = 448;
+  canvas.height = 400;
+
+  /*Variables*/
+  const ballRadius = 4;
+
+  //posicion
+  let x = canvas.width / 2;
+  let y = canvas.height - 30;
+
+  //Velocidad
+  let dx = -2;
+  let dy = -2;
+
+  //Variables de la pala
+  const paddleHeight = 10;
+  const paddleWidth = 75;
+
+  let paddleX = (canvas.width - paddleWidth) / 2;
+  let paddleY = canvas.height - paddleHeight - 10;
+
+  let rightPressed = false;
+  let leftPressed = false;
+
+  function drawBall() {
+    //Dibujar la bola
+    ctx.beginPath();
+    ctx.arc(x, y, ballRadius, 0, Math - PI * 2);
+    ctx.fillStyle = "#fff";
+    ctx.fill();
+    ctx.closePath();
+  }
+
+  function drawPaddle() {
+    ctx.fillStyle = "#09f";
+    ctx.fillRect(
+      paddleX, // su posicion en x
+      paddleY, // su posicion en y
+      paddleWidth, // su ancho
+      paddleHeight // su alto
+    );
+  }
+
+  function drawBricks() {}
+
+  function collisionDetection() {}
+  function ballMovement() {
+    // Rebotes y colisiones
+    if (
+      x + dx > canvas.width - ballRadius || // derecha
+      x + dx < balllRadius // izquierda
+    ) {
+      dx = -dx;
+    }
+
+    //Techo
+    if (y + dy < ballRadius) {
+      dy = -dy;
+    }
+
+    if (y + dy > canvas.height - ballRadius) {
+      alert("GAME OVER");
+      document.location.reload();
+    }
+    //Movimiento de la bola
+    x += dx;
+    y += dy;
+  }
+
+  function paddleMovement() {}
+
+  function cleanCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  function initEvents() {
+    document.addEventListener("keydown", keyDownHandler);
+    document.addEventListener("keyup", keyDownHandler);
+
+    function keyDownHandler(even) {
+      const { key } = event;
+    }
+  }
+
+  function draw() {
+    //Dibujar los elementos
+    cleanCanvas();
+    drawBall();
+    drawPaddle();
+    drawBricks();
+
+    //colisoopnes y Movimientos
+
+    collisionDetection();
+    ballMovement();
+    paddleMovement();
+
+    window.requestAnimationFrame(draw);
+  }
+
+  draw();
+</script>
