@@ -261,6 +261,7 @@
 
     //recuperamos el primer elemento que se arrastre que este mas cerca del Article
     const actualCard = event.target.closest("article");
+    if (!actualCard) return;
     // Recuperamos la posicion inical del raton o de los dedos
     const startX = e.pageX ?? event.touches[0].pageX;
 
@@ -282,6 +283,16 @@
       const deg = pullDeltaTax / 10;
       actualCard.style.transform = `translateX(${pullDeltaTax}px) rotate(${deg}deg)`;
       actualCard.style.curosor = "grabbing";
+
+      // cambiar la opacidad al mover
+      const opacity = Math.abs(pullDeltaTax) / 100;
+      const isright = pullDeltaTax > 0;
+
+      const choiceEl = isright
+        ? actualCard.querySelector(".choice.like")
+        : actualCard.querySelector(".choice.nope");
+
+      choiceEl.style.opacity = opacity;
     }
 
     function onEnd(event) {
@@ -302,9 +313,23 @@
       } else {
         actualCard.classList.add("reset");
         actualCard.classList.remove("go-right", "go-left");
+        actualCard
+          .querySelectorAll(".choice")
+          .forEach((el) => (el.style.opacity = 0));
       }
 
       //resetear als variables
+      actualCard.addEventListener(
+        "transitionend",
+        () => {
+          actualCard.removeAttribute("style");
+          actualCard.classList.remove("reset");
+
+          pullDeltaTax = 0;
+          isAnimating = false;
+        },
+        { once: true }
+      );
     }
   }
 
