@@ -35,6 +35,8 @@
   let dx = -2;
   let dy = -2;
 
+  const PADDLE_SENSITIVITY = 8
+
   //Variables de la pala
   const paddleHeight = 10;
   const paddleWidth = 75;
@@ -82,7 +84,7 @@
     }
 
     if (y + dy > canvas.height - ballRadius) {
-      alert("GAME OVER");
+      consoloe.log("GAME OVER");
       document.location.reload();
     }
     //Movimiento de la bola
@@ -90,8 +92,13 @@
     y += dy;
   }
 
-  function paddleMovement() {}
-
+  function paddleMovement() {
+    if (rightPressed && paddleX < canvas.width - paddleWidth) {
+      paddleX += PADDLE_SENSITIVITY
+    } else if (leftPressed && paddleX > 0) {
+      paddleX -= PADDLE_SENSITIVITY
+    }
+  }
   function cleanCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
@@ -99,6 +106,26 @@
   function initEvents() {
     document.addEventListener("keydown", keyDownHandler);
     document.addEventListener("keyup", keyDownHandler);
+
+    function keyDownHandler(event) {
+      const { key } = event
+      if (key === 'Right' || key === 'ArrowRight' || key.toLowerCase() === 'd') {
+        rightPressed = true
+      } else if (key === 'Left' || key === 'ArrowLeft' || key.toLowerCase() === 'a') {
+        leftPressed = true
+      }
+    }
+
+    function keyUpHandler(event) {
+      const { key } = event
+      if (key === 'Right' || key === 'ArrowRight' || key.toLowerCase() === 'd') {
+        rightPressed = false
+      } else if (key === 'Left' || key === 'ArrowLeft' || key.toLowerCase() === 'a') {
+        leftPressed = false
+      }
+    }
+  }
+
 
     function keyDownHandler(even) {
       const { key } = event;
@@ -121,5 +148,6 @@
     window.requestAnimationFrame(draw);
   }
 
-  draw();
+  draw()
+  initEvents()
 </script>
